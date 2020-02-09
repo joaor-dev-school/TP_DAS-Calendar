@@ -1,9 +1,12 @@
 package tp.das.Model;
 
+import tp.das.Model.Evento.Evento;
+
 public class Utilizador {
     private String username;
     private String password;
     private String nome;
+    private  Evento evento;
 
     public Utilizador() {
     }
@@ -30,5 +33,15 @@ public class Utilizador {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void removeEvent(Evento ev) {
+    }
+
+    public void addEvent(Evento ev) {
+    }
+
+    public Evento getEvent() {
+        return evento;
     }
 }
