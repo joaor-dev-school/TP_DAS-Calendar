@@ -1,6 +1,6 @@
 package tp.das.Model.Evento;
 
-import tp.das.Model.Utilizador;
+import tp.das.Model.Utilizador.Utilizador;
 
 import java.util.List;
 

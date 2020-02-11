@@ -1,4 +1,4 @@
-package tp.das.Model;
+package tp.das.Model.Utilizador;
 
 import tp.das.Model.Evento.Evento;
 
@@ -6,7 +6,7 @@ public class Utilizador {
     private String username;
     private String password;
     private String nome;
-    private  Evento evento;
+    private Evento evento;
 
     public Utilizador() {
     }

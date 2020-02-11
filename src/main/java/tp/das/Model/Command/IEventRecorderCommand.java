@@ -1,6 +1,6 @@
 package tp.das.Model.Command;
 
-import tp.das.Model.Utilizador;
+import tp.das.Model.Utilizador.Utilizador;
 
 public interface IEventRecorderCommand {
 
