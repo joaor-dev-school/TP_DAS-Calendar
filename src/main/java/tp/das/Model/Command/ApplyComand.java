@@ -1,7 +1,7 @@
 package tp.das.Model.Command;
 import tp.das.Model.Evento.Evento;
 import tp.das.Model.Evento.IEstrategiaEventoColaborativo;
-import tp.das.Model.Utilizador;
+import tp.das.Model.Sistema.Utilizador;
 
 public class ApplyComand implements IEventRecorderCommand {
 
@@ -26,6 +26,5 @@ public class ApplyComand implements IEventRecorderCommand {
         if (ev != null && evento != null) {
             evento.selectData(ev.getConvidados());
         }
-
     }
 }

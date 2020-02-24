@@ -1,7 +1,7 @@
 package tp.das.Model.Command;
 
 import tp.das.Model.Evento.Evento;
-import tp.das.Model.Utilizador;
+import tp.das.Model.Sistema.Utilizador;
 
 public class AddEventCommand implements IEventRecorderCommand{
     private Evento ev;

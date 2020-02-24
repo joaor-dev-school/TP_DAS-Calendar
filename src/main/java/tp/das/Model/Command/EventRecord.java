@@ -1,6 +1,6 @@
 package tp.das.Model.Command;
 
-import tp.das.Model.Utilizador;
+import tp.das.Model.Sistema.Utilizador;
 
 import java.util.ArrayList;
 import java.util.List;
