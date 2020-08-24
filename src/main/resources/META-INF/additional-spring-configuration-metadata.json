@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "tp.das.Events.UniqueParticipants.message",
+      "type": "java.lang.String",
+      "description": "Description for tp.das.Events.UniqueParticipants.message."
+    },
+    {
+      "name": "tp.das.Events.SchedulingType.message",
+      "type": "java.lang.String",
+      "description": "Description for tp.das.Events.SchedulingType.message."
+    },
+    {
+      "name": "tp.das.Events.UniqueTimestamps.message",
+      "type": "java.lang.String",
+      "description": "Description for tp.das.Events.UniqueTimestamps.message."
+    },
+    {
+      "name": "tp.das.Events.SchedulingPreference.message",
+      "type": "java.lang.String",
+      "description": "Description for tp.das.Events.SchedulingPreference.message."
+    }
+  ] }

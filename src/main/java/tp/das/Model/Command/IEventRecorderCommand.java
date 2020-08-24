@@ -1,9 +1,9 @@
 package tp.das.Model.Command;
 
-import tp.das.Model.Utilizador.Utilizador;
+import tp.das.Model.Utilizador.UserModel;
 
 public interface IEventRecorderCommand {
 
-    void execute(Utilizador client);
-    void undo(Utilizador client);
+    void execute(UserModel client);
+    void undo(UserModel client);
 }

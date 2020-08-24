@@ -1,21 +1,21 @@
 package tp.das.Model.Command;
 
-import tp.das.Model.Evento.Evento;
-import tp.das.Model.Utilizador.Utilizador;
+import tp.das.Model.Event.EventModel;
+import tp.das.Model.Utilizador.UserModel;
 
 public class AddEventCommand implements IEventRecorderCommand{
-    private Evento ev;
-    public AddEventCommand(Evento ev) {
+    private EventModel ev;
+    public AddEventCommand(EventModel ev) {
         this.ev = ev;
     }
 
     @Override
-    public void execute(Utilizador client) {
-        client.addEvent(ev);
+    public void execute(UserModel client) {
+//        client.addEvent(ev);
     }
 
     @Override
-    public void undo(Utilizador client) {
-        client.removeEvent(ev);
+    public void undo(UserModel client) {
+//        client.removeEvent(ev);
     }
 }

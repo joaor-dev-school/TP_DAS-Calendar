@@ -1,6 +1,6 @@
 package tp.das.Model.Command;
 
-import tp.das.Model.Utilizador.Utilizador;
+import tp.das.Model.Utilizador.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.List;
 public class EventRecord {
 
 
-    private Utilizador client;
+    private UserModel client;
     private List<IEventRecorderCommand> undoList;
     private List<IEventRecorderCommand> redoList;
 
-    public Utilizador getClient() {
+    public UserModel getClient() {
         return client;
     }
 
@@ -24,7 +24,7 @@ public class EventRecord {
         return redoList;
     }
 
-    public EventRecord(Utilizador client) {
+    public EventRecord(UserModel client) {
         this.client = client;
         this.undoList = new ArrayList<>();
         this.redoList = new ArrayList<>();

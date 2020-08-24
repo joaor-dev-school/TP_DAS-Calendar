@@ -1,31 +1,30 @@
 package tp.das.Model.Command;
-import tp.das.Model.Evento.Evento;
-import tp.das.Model.Evento.IEstrategiaEventoColaborativo;
-import tp.das.Model.Utilizador.Utilizador;
+import tp.das.Model.Event.Strategy.ISchedulingStrategy;
+import tp.das.Model.Utilizador.UserModel;
 
 public class ApplyComand implements IEventRecorderCommand {
 
-    private IEstrategiaEventoColaborativo evento;
+    private ISchedulingStrategy evento;
     @Override
-    public void execute(Utilizador client) {
+    public void execute(UserModel client) {
 
-        Evento ev = client.getEvent();
+        /*EventModel ev = client.getEventModel();
 
         if (ev != null) {
-            evento.selectData(ev.getConvidados());
-            ev.setOrganizador(client);
-        }
+            evento.selectDate(ev.getParticipants());
+            ev.setCreator(client);
+        }*/
 
     }
 
     @Override
-    public void undo(Utilizador client) {
+    public void undo(UserModel client) {
 
-        Evento ev = client.getEvent();
+        /*EventModel ev = client.getEventModel();
 
         if (ev != null && evento != null) {
-            evento.selectData(ev.getConvidados());
-        }
+            evento.selectDate(ev.getParticipants());
+        }*/
 
     }
 }
