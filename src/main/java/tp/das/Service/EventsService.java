@@ -27,8 +27,12 @@ public class EventsService {
     public EventListResponseDTO findAll() {
         final List<EventModel> events = EventsDataMapper.getInstance().findAll();
         return new EventListResponseDTO(events.stream().map((EventModel event) -> new EventListItemResponseDTO(event.getId(),
-                event.getCreator().getId(), event.getName(), event.getType(),
-                this.datesModelToResponse(event.getDates()))).collect(Collectors.toList()));
+                event.getCreator().getId(),
+                event.getParticipants().stream().map((EventParticipantModel p) ->
+                        new EventParticipantResponseDTO(p.getUserModel().getId(), p.getUserModel().getName(), p.getState())).collect(Collectors.toList()),
+                event.getName(), event.getType(),
+                this.datesModelToResponse(event.getDates()))
+        ).collect(Collectors.toList()));
     }
 
     public EventDetailsResponseDTO findById(Long id) {
@@ -119,18 +123,25 @@ public class EventsService {
         this.eventCommandHandler.cleanUserRecord(userId);
     }
 
-    public void updateEventSchedulingStatus(Long eventId, EventSchedulingStatusDTO preferencesDTO) {
+    public void updateEventCollaborativeStatus(Long eventId, EventSchedulingStatusDTO preferencesDTO) {
         final Long userId = preferencesDTO.getUserId();
-        this.eventCommandHandler.apply(userId, preferencesDTO.getAccept()
-                ? new UpdateEventSchedulingStatusCommand(eventId, userId,
+        this.eventCommandHandler.apply(userId, preferencesDTO.getStatus() == EventParticipantStatesEnum.ACCEPTED
+                ? new UpdateEventCollaborativeStatusCommand(eventId, userId,
                 preferencesDTO.getPreferredTimestamps(), preferencesDTO.getAcceptableTimestamps())
-                : new UpdateEventSchedulingStatusCommand(eventId, userId));
+                : new UpdateEventCollaborativeStatusCommand(eventId, userId, preferencesDTO.getStatus()));
     }
 
-    public void updateEventInviteStatus(Long eventId, ChangeEventStatusDTO statusDTO) {
+    public void updateEventSimpleStatus(Long eventId, ChangeEventStatusDTO statusDTO) {
         final Long userId = statusDTO.getUserId();
-        this.eventCommandHandler.apply(userId, new UpdateEventInviteStatusCommand(eventId, userId,
-                statusDTO.getAccept() ? EventParticipantStatesEnum.ACCEPTED : EventParticipantStatesEnum.DECLINED));
+        this.eventCommandHandler.apply(userId, new UpdateEventSimpleStatusCommand(eventId, userId, statusDTO.getStatus()));
+    }
+
+    public boolean userHasUndo(Long userId) {
+        return this.eventCommandHandler.getUserUndoOperationsSize(userId) > 0;
+    }
+
+    public boolean userHasRedo(Long userId) {
+        return this.eventCommandHandler.getUserRedoOperationsSize(userId) > 0;
     }
 
     private EventDetailsResponseDTO eventModelToDetails(EventModel event) {

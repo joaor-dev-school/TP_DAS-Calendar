@@ -1,5 +1,7 @@
 package tp.das.DTOs.Event;
 
+import tp.das.Model.Event.EventParticipantStatesEnum;
+import tp.das.Model.Event.EventTypesEnum;
 import tp.das.Validators.Users.UserId;
 
 import javax.validation.constraints.Min;
@@ -13,14 +15,14 @@ public class ChangeEventStatusDTO {
     private Long userId;
 
     @NotNull
-    private Boolean accept;
+    private EventParticipantStatesEnum status;
 
-    public Boolean getAccept() {
-        return accept;
+    public EventParticipantStatesEnum getStatus() {
+        return status;
     }
 
-    public void setAccept(Boolean accept) {
-        this.accept = accept;
+    public void setStatus(EventParticipantStatesEnum status) {
+        this.status = status;
     }
 
     public Long getUserId() {

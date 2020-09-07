@@ -11,10 +11,6 @@ public class SessionService {
     private static Connection connection;
     private static UnitOfWork unitOfWork;
 
-    private SessionService() {
-
-    }
-
     public static Connection getConnection() {
         try {
             if (connection != null) {

@@ -3,6 +3,7 @@ package tp.das.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tp.das.DTOs.BooleanStateResponseDTO;
 import tp.das.DTOs.Event.*;
 import tp.das.Model.Event.EventTypesEnum;
 import tp.das.Service.EventsService;
@@ -26,8 +27,8 @@ public class EventsController {
     }
 
     @DeleteMapping(path = "/{eventId}")
-    public ResponseEntity deleteById(@PathVariable("eventId") Long eventId) {
-        // TODO: implement this!
+    public ResponseEntity deleteInvite(@PathVariable("eventId") Long eventId) {
+        EventsService.getInstance().deleteEvent(eventId);
         return ResponseEntity.ok().build();
     }
 
@@ -44,30 +45,31 @@ public class EventsController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(path = "/invite/{eventId}")
-    public ResponseEntity deleteInvite(@PathVariable("eventId") Long eventId) {
-        EventsService.getInstance().deleteEvent(eventId);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping(path = "/scheduling")
     public ResponseEntity createScheduling(@Valid @RequestBody CreateSchedulingEventDTO createSchedulingEventDTO) {
         EventsService.getInstance().createEvent(createSchedulingEventDTO, createSchedulingEventDTO.getType());
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(path = "/scheduling/{eventId}/status")
-    public ResponseEntity changeSchedulingPreferences(@PathVariable("eventId") Long eventId,
-                                                      @Valid @RequestBody EventSchedulingStatusDTO statusDTO) {
-        EventsService.getInstance().updateEventSchedulingStatus(eventId, statusDTO);
+    @PutMapping(path = "/scheduling/{eventId}")
+    public ResponseEntity updateScheduling(@PathVariable("eventId") Long eventId,
+                                           @Valid @RequestBody CreateSchedulingEventDTO createSchedulingEventDTO) {
+        EventsService.getInstance().editEvent(eventId, createSchedulingEventDTO, createSchedulingEventDTO.getType());
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(path = "/invite/{eventId}/status")
+    @PatchMapping(path = "/collaborative-status/{eventId}")
+    public ResponseEntity changeSchedulingPreferences(@PathVariable("eventId") Long eventId,
+                                                      @Valid @RequestBody EventSchedulingStatusDTO statusDTO) {
+        EventsService.getInstance().updateEventCollaborativeStatus(eventId, statusDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(path = "/simple-status/{eventId}")
     public ResponseEntity changeStatus(@PathVariable("eventId") Long eventId,
                                        @Valid @RequestBody ChangeEventStatusDTO statusDTO) {
-        EventsService.getInstance().updateEventInviteStatus(eventId, statusDTO);
-        return ResponseEntity.ok("changeStatus");
+        EventsService.getInstance().updateEventSimpleStatus(eventId, statusDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(path = "/operationRedo")
@@ -80,6 +82,22 @@ public class EventsController {
     public ResponseEntity operationUndo(@Valid @RequestBody UserOperationDTO operationDTO) {
         EventsService.getInstance().undoEventOperation(operationDTO.getUserId());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/resetRecord")
+    public ResponseEntity resetUndoRedoHistory(@Valid @RequestBody UserOperationDTO userOperationDTO) {
+        EventsService.getInstance().cleanUserRecord(userOperationDTO.getUserId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(path = "/hasUndo/{userId}")
+    public ResponseEntity hasUndo(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(new BooleanStateResponseDTO(EventsService.getInstance().userHasUndo(userId)));
+    }
+
+    @GetMapping(path = "/hasRedo/{userId}")
+    public ResponseEntity hasRedo(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(new BooleanStateResponseDTO(EventsService.getInstance().userHasRedo(userId)));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

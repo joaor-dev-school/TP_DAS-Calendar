@@ -16,6 +16,13 @@ public class NotificationModel implements EntityModel {
         this.read = false;
     }
 
+    public NotificationModel(Long id, UserModel user, EventModel event, Boolean read) {
+        this.id = id;
+        this.user = user;
+        this.event = event;
+        this.read = read;
+    }
+
     @Override
     public Long getId() {
         return id;

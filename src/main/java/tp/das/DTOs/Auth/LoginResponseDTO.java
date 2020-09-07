@@ -13,4 +13,20 @@ public class LoginResponseDTO {
         this.user = user;
         this.notifications = notifications;
     }
+
+    public UserResponseDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserResponseDTO user) {
+        this.user = user;
+    }
+
+    public List<EventDetailsResponseDTO> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<EventDetailsResponseDTO> notifications) {
+        this.notifications = notifications;
+    }
 }

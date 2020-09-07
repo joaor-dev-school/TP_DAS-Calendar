@@ -5,6 +5,8 @@ import tp.das.Model.Event.Strategy.ISchedulingStrategy;
 import tp.das.Model.Utilizador.UserModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EventSchedulingModel extends EventModel {
@@ -13,9 +15,9 @@ public class EventSchedulingModel extends EventModel {
 
     private ISchedulingStrategy schedulingStrategy;
 
-    public EventSchedulingModel(String name, UserModel creator, EventTypesEnum type, List<EventParticipantModel> participants,
+    public EventSchedulingModel(Long id, String name, UserModel creator, EventTypesEnum type, List<EventParticipantModel> participants,
                                 List<DateModel> dates, ISchedulingStrategy schedulingStrategy) {
-        super(name, creator, type, participants, dates);
+        super(id, name, creator, type, participants, dates);
         this.schedulingStrategy = schedulingStrategy;
         this.updateSelectedDate();
     }
@@ -42,10 +44,9 @@ public class EventSchedulingModel extends EventModel {
 
     @Override
     public List<DateModel> getDates() {
-        List<DateModel> res = new ArrayList<>();
-        if (this.selectedDate != null) {
-            res.add(selectedDate);
+        if (this.selectedDate == null) {
+            return super.getDates();
         }
-        return res;
+        return new ArrayList<>(Collections.singletonList(selectedDate));
     }
 }

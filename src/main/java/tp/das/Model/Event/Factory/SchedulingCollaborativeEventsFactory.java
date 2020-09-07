@@ -22,6 +22,6 @@ public class SchedulingCollaborativeEventsFactory extends EventsFactory {
         final String name = createEventDTO.getEventName();
         final EventTypesEnum type = ((CreateSchedulingEventDTO) createEventDTO).getType();
 
-        return new EventSchedulingModel(name, creator, type, participants, date, new SchedulingCollaborativeEventStrategy());
+        return new EventSchedulingModel(id, name, creator, type, participants, date, new SchedulingCollaborativeEventStrategy());
     }
 }

@@ -2,6 +2,7 @@ package tp.das.Model.Event.Factory;
 
 import tp.das.DTOs.Event.CreateEventDTO;
 import tp.das.DTOs.Event.CreateEventDateDTO;
+import tp.das.Model.Database.DataMappers.UsersDataMapper;
 import tp.das.Model.Event.DateModel;
 import tp.das.Model.Event.EventModel;
 import tp.das.Model.Event.EventParticipantModel;
@@ -30,7 +31,7 @@ public abstract class EventsFactory {
     public abstract EventModel getEvent(CreateEventDTO createEventDTO, Long id);
 
     UserModel resolveCreator(Long creatorId) {
-        final UserModel creator = UsersService.findById(creatorId);
+        final UserModel creator = UsersDataMapper.getInstance().find(creatorId);
 
         if (creator == null) {
             // TODO: Create an exception for bad request (400).
@@ -49,7 +50,7 @@ public abstract class EventsFactory {
                 continue;
             }
 
-            final UserModel participantUser = UsersService.findById(participantId);
+            final UserModel participantUser = UsersDataMapper.getInstance().find(participantId);
             if (participantUser != null) {
                 participants.add(new EventParticipantModel(participantUser, EventParticipantStatesEnum.NEW));
             }

@@ -7,13 +7,15 @@ import java.util.List;
 public class EventListItemResponseDTO {
     private Long eventId;
     private Long creator;
+    private List<EventParticipantResponseDTO> participants;
     private String name;
     private EventTypesEnum type;
     private List<EventDateResponseDTO> dates;
 
-    public EventListItemResponseDTO(Long eventId, Long creator, String name, EventTypesEnum type, List<EventDateResponseDTO> dates) {
+    public EventListItemResponseDTO(Long eventId, Long creator, List<EventParticipantResponseDTO> participants, String name, EventTypesEnum type, List<EventDateResponseDTO> dates) {
         this.eventId = eventId;
         this.creator = creator;
+        this.participants = participants;
         this.name = name;
         this.type = type;
         this.dates = dates;
@@ -33,6 +35,14 @@ public class EventListItemResponseDTO {
 
     public void setCreator(Long creator) {
         this.creator = creator;
+    }
+
+    public List<EventParticipantResponseDTO> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<EventParticipantResponseDTO> participants) {
+        this.participants = participants;
     }
 
     public String getName() {

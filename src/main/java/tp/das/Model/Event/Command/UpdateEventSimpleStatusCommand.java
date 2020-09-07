@@ -7,7 +7,7 @@ import tp.das.Model.Event.EventParticipantStatesEnum;
 import tp.das.Service.EventsService;
 import tp.das.Service.SessionService;
 
-public class UpdateEventInviteStatusCommand implements IEventCommand {
+public class UpdateEventSimpleStatusCommand implements IEventCommand {
 
     private Long eventId;
     private Long participantId;
@@ -15,7 +15,7 @@ public class UpdateEventInviteStatusCommand implements IEventCommand {
     private EventParticipantStatesEnum newStatus;
     private EventParticipantStatesEnum oldStatus;
 
-    public UpdateEventInviteStatusCommand(Long eventId, Long participantId, EventParticipantStatesEnum newStatus) {
+    public UpdateEventSimpleStatusCommand(Long eventId, Long participantId, EventParticipantStatesEnum newStatus) {
         final EventsService eventsService = EventsService.getInstance();
         final EventModel eventModel = eventsService.findEventById(eventId);
         final EventParticipantModel participantModel = eventsService.findParticipantById(eventModel, participantId);

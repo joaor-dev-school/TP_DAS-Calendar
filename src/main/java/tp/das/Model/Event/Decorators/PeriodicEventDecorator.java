@@ -7,81 +7,77 @@ import tp.das.Model.Event.PeriodicityDaysTypeEnum;
 
 import java.util.*;
 
-public class PeriodicEventDecorator extends EventModel {
+public class PeriodicEventDecorator extends EventModel implements IPeriodicEventDecorator {
     private static final long DAY_MS = 1000 * 60 * 60 * 24L;
 
     private List<EventPeriodicityRule> rules;
 
     private Long rangeTimestamp;
 
-    private List<DateModel> datesCache;
+    private List<DateModel> dates;
 
     public PeriodicEventDecorator(EventModel eventModel, List<EventPeriodicityRule> rules,
                                   Long rangeTimestamp) {
         super(eventModel);
         this.rules = rules;
         this.rangeTimestamp = rangeTimestamp;
+        this.dates = this.getEventDecorated().getDates();
+        if (this.dates.size() == 0) {
+            throw new RuntimeException("No valid dates for the event");
+        }
+    }
+
+    private IPeriodicEventDecorator getEventDecorated() {
+        IPeriodicEventDecorator eventDecorated = this;
+        for (EventPeriodicityRule rule : this.rules) {
+            if (rule.getDaysType() == PeriodicityDaysTypeEnum.DAY) {
+                eventDecorated = new DayPeriodicEventDecorator(eventDecorated, rule);
+                continue;
+            }
+            eventDecorated = new WeekPeriodicEventDecorator(eventDecorated, rule);
+        }
+        return eventDecorated;
     }
 
     public List<EventPeriodicityRule> getRules() {
         return rules;
     }
 
-    public void setRules(List<EventPeriodicityRule> rules) {
-        this.rules = rules;
-    }
-
     public Long getRangeTimestamp() {
         return rangeTimestamp;
     }
 
-    public void setRangeTimestamp(Long rangeTimestamp) {
-        this.rangeTimestamp = rangeTimestamp;
-    }
-
+    @Override
     public List<DateModel> getDates() {
-        final List<DateModel> initialDatesModels = super.getDates();
-        if (initialDatesModels.size() != 1) {
-            return initialDatesModels;
+        if (dates != null) {
+            return dates;
         }
-        if (datesCache != null) {
-            return datesCache;
+
+        final List<DateModel> initialDatesModels = super.getDates();
+        if (initialDatesModels.size() != 1 || this.rules.size() < 1) {
+            return initialDatesModels;
         }
 
         final DateModel firstDateModel = initialDatesModels.get(0);
-        final long duration = firstDateModel.getDuration();
-        final Map<Long, DateModel> datesModelsMap = new HashMap<>();
+        final long firstDateTimestamp = firstDateModel.getTimestamp();
+        final long duration = Math.min(firstDateModel.getDuration(),
+                Math.abs(this.resolveDayTimePrecision0(firstDateTimestamp + DAY_MS) - firstDateTimestamp));
+        final List<DateModel> datesRes = new ArrayList<>();
 
-        for (EventPeriodicityRule rule : rules) {
-            final List<Integer> dayValues = rule.getDays();
-            final List<Integer> dayNotValues = rule.getDaysNot();
-            final Set<Integer> dayValuesSet = dayValues != null ? new HashSet<>(dayValues) : null;
-            final Set<Integer> dayNotValuesSet = dayNotValues != null ? new HashSet<>(dayNotValues) : null;
-
-            long timestamp = firstDateModel.getTimestamp();
-            while (timestamp < rangeTimestamp) {
-                final long dayTimePrecision0 = this.resolveDayTimePrecision0(timestamp);
-                final Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(dayTimePrecision0);
-
-                final Integer dayValue = this.resolveDayValue(rule.getDaysType(), calendar);
-                if (dayValues != null && !dayValuesSet.contains(dayValue)
-                        || dayNotValues != null && dayNotValuesSet.contains(dayValue)) {
-                    datesModelsMap.remove(calendar.getTimeInMillis());
-                } else {
-                    datesModelsMap.put(calendar.getTimeInMillis(), new DateModel(timestamp, duration));
-                }
-                timestamp += DAY_MS * rule.getStep();
-            }
+        for (long timestamp = firstDateModel.getTimestamp(); timestamp < rangeTimestamp; timestamp += DAY_MS) {
+            datesRes.add(new DateModel(timestamp, duration));
         }
-        return this.datesCache = new ArrayList<>(datesModelsMap.values());
+
+        return datesRes;
     }
 
-    private Integer resolveDayValue(PeriodicityDaysTypeEnum daysType, Calendar calendar) {
-        if (daysType.equals(PeriodicityDaysTypeEnum.DAY)) {
-            return calendar.get(Calendar.DAY_OF_MONTH);
+    @Override
+    public DateModel getReferenceDate() {
+        final List<DateModel> dates = super.getDates();
+        if (dates.size() < 1) {
+            return null;
         }
-        return calendar.get(Calendar.DAY_OF_WEEK);
+        return dates.get(0);
     }
 
     private long resolveDayTimePrecision0(Long timestamp) {

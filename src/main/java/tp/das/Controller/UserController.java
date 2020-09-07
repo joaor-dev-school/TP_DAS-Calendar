@@ -27,6 +27,11 @@ public class UserController {
         return ResponseEntity.ok(UsersService.findByAll());
     }
 
+    @GetMapping(path = "/{userId}")
+    public ResponseEntity getUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(UsersService.findById(userId));
+    }
+
     @PutMapping(path = "/calendar_preferences")
     public ResponseEntity changeCalendarPreferences(@Valid @RequestBody UserSchedulingPreferencesDTO preferencesDTO) {
         UsersService.changeUserPreferences(preferencesDTO);

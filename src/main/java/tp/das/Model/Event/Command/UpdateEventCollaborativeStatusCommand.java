@@ -11,7 +11,7 @@ import tp.das.Service.SessionService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateEventSchedulingStatusCommand implements IEventCommand {
+public class UpdateEventCollaborativeStatusCommand implements IEventCommand {
 
     private boolean isFirstTime;
 
@@ -30,20 +30,19 @@ public class UpdateEventSchedulingStatusCommand implements IEventCommand {
     private DateModel oldDate;
     private DateModel newDate;
 
-    public UpdateEventSchedulingStatusCommand(Long eventId, Long eventParticipantId) {
-        this(eventId, eventParticipantId, new ArrayList<>(), new ArrayList<>(),
-                EventParticipantStatesEnum.DECLINED);
+    public UpdateEventCollaborativeStatusCommand(Long eventId, Long eventParticipantId, EventParticipantStatesEnum status) {
+        this(eventId, eventParticipantId, new ArrayList<>(), new ArrayList<>(), status);
     }
 
-    public UpdateEventSchedulingStatusCommand(Long eventId, Long eventParticipantId,
-                                              List<Long> newPreferredTimestamps, List<Long> newAcceptableTimestamps) {
+    public UpdateEventCollaborativeStatusCommand(Long eventId, Long eventParticipantId,
+                                                 List<Long> newPreferredTimestamps, List<Long> newAcceptableTimestamps) {
         this(eventId, eventParticipantId, newPreferredTimestamps, newAcceptableTimestamps,
                 EventParticipantStatesEnum.ACCEPTED);
     }
 
-    private UpdateEventSchedulingStatusCommand(Long eventId, Long participantId,
-                                               List<Long> newPreferredTimestamps, List<Long> newAcceptableTimestamps,
-                                               EventParticipantStatesEnum newStatus) {
+    private UpdateEventCollaborativeStatusCommand(Long eventId, Long participantId,
+                                                  List<Long> newPreferredTimestamps, List<Long> newAcceptableTimestamps,
+                                                  EventParticipantStatesEnum newStatus) {
         final EventsService eventsService = EventsService.getInstance();
         final EventSchedulingModel eventModel = eventsService.findSchedulingBydId(eventId);
         final EventParticipantModel participantModel = eventsService.findParticipantById(eventModel, participantId);

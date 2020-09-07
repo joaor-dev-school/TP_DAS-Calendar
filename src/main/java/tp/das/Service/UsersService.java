@@ -14,9 +14,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UsersService {
-    public static UserModel findById(Long id) {
-        return UsersDataMapper.getInstance().find(id);
+    public static UserResponseDTO findById(Long id) {
+        final UserModel user = UsersDataMapper.getInstance().find(id);
+        if (user == null) {
+            throw new RuntimeException("Couldn't find any user with the given event id");
+        }
+        return new UserResponseDTO(id, user.getName(), user.getAccount().getUsername());
     }
+
     public static UserResponseDTO findByAccountId(Long id) {
         final List<UserModel> userModels = UsersDataMapper.getInstance().findAll();
         for (UserModel userModel : userModels) {
@@ -35,7 +40,7 @@ public class UsersService {
     }
 
     public static void changeUserPreferences(UserSchedulingPreferencesDTO preferences) {
-        final UserModel userModel = findById(preferences.getUserId());
+        final UserModel userModel = UsersDataMapper.getInstance().find(preferences.getUserId());
         if (userModel == null) {
             throw new RuntimeException("Couldn't find any user with the given event id");
         }

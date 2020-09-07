@@ -15,8 +15,14 @@ public class CreateEventCommand implements IEventCommand {
 
     public void doCommand() {
         final UnitOfWork unitOfWork = SessionService.getUnitOfWork();
+        final Long previousId = this.eventModel.getId();
         unitOfWork.registerNew(this.eventModel);
+        this.eventModel.setId(previousId);
         unitOfWork.commit();
+        if (previousId != null) {
+            unitOfWork.registerDirty(this.eventModel);
+            unitOfWork.commit();
+        }
         NotificationsService.getInstance().createNotification(this.eventModel);
     }
 

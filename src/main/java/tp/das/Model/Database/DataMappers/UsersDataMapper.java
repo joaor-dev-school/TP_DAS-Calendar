@@ -1,6 +1,5 @@
 package tp.das.Model.Database.DataMappers;
 
-import tp.das.Model.Auth.AuthModel;
 import tp.das.Model.Database.DataMapper;
 import tp.das.Model.Utilizador.UserModel;
 
@@ -17,13 +16,6 @@ public class UsersDataMapper implements DataMapper<UserModel> {
 
     private UsersDataMapper() {
         users = new HashMap<>();
-        try {
-            // TODO: remove mock users
-            this.create(new UserModel(new AuthModel("joao", "pass"), "João Paulo"));
-            this.create(new UserModel(new AuthModel("joana", "pass"), "Joana Lopes"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static UsersDataMapper getInstance() {

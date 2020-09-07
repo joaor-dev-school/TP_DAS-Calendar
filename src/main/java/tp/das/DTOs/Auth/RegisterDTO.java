@@ -19,6 +19,12 @@ public class RegisterDTO {
     @Size(min = AuthDTOConstants.MIN_LENGTH_NAME, max = AuthDTOConstants.MAX_LENGTH_NAME)
     private String name;
 
+    public RegisterDTO(@NotNull @Size(min = AuthDTOConstants.MIN_LENGTH_USERNAME, max = AuthDTOConstants.MAX_LENGTH_USERNAME) String username, @NotNull @Size(min = AuthDTOConstants.MIN_LENGTH_PASSWORD, max = AuthDTOConstants.MAX_LENGTH_PASSWORD) String password, @NotNull @Size(min = AuthDTOConstants.MIN_LENGTH_NAME, max = AuthDTOConstants.MAX_LENGTH_NAME) String name) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+    }
+
     public String getUsername() {
         return username;
     }
