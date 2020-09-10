@@ -17,7 +17,7 @@ public class TimerService {
     private TimerService() {
         this.listenersMap = new HashMap<>();
 
-        final Runnable timerRunnable = () -> {
+        final Thread timerRunnable = new Thread(() -> {
             int errorCount = 0;
             while (errorCount < 3) {
                 try {
@@ -32,8 +32,9 @@ public class TimerService {
                     errorCount++;
                 }
             }
-        };
-        timerRunnable.run();
+        });
+        timerRunnable.setDaemon(true);
+        timerRunnable.start();
     }
 
     public static TimerService getInstance() {

@@ -1,10 +1,13 @@
 package tp.das.Controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tp.das.DTOs.Event.EventNotificationResponseDTO;
 import tp.das.DTOs.Event.UserOperationDTO;
+import tp.das.DTOs.Notification.NotificationChangeStateDTO;
 import tp.das.DTOs.User.UserSchedulingPreferencesDTO;
 import tp.das.Model.Shared.LongObject;
 import tp.das.Service.NotificationsService;
@@ -17,10 +20,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private ExecutorService nonBlockingService = Executors.newCachedThreadPool();
 
     @GetMapping(path = "/all")
     public ResponseEntity getUsers() {
@@ -38,32 +41,44 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(path = "/notifications", produces = "text/event-stream")
-    public SseEmitter getNotifications(@Valid @RequestBody UserOperationDTO operationDTO) {
-        SseEmitter emitter = new SseEmitter();
+    /*@GetMapping(path = "/notifications/{userId}")
+    public ResponseBodyEmitter getNotifications(@PathVariable("userId") Long userId) {
         final LongObject subscription = new LongObject(-1);
+        SseEmitter sseEmitter = new SseEmitter();
+        final ExecutorService nonBlockingService = Executors.newSingleThreadExecutor();
         nonBlockingService.execute(() -> {
             try {
                 subscription.value = TimerService.getInstance().subscribe((Long timeMs) -> {
                     final List<EventNotificationResponseDTO> notificationsDTO = NotificationsService.getInstance()
-                            .getUserNotifications(operationDTO.getUserId());
-                    if (!notificationsDTO.isEmpty()) {
-                        try {
-                            emitter.send(notificationsDTO);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            emitter.completeWithError(e);
-                        }
+                            .getUserNotifications(userId);
+                    try {
+                        sseEmitter.send(notificationsDTO, MediaType.APPLICATION_JSON);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        sseEmitter.completeWithError(e);
+                        TimerService.getInstance().unsubscribe(subscription.value);
                     }
                 });
             } catch (Exception ex) {
-                emitter.completeWithError(ex);
-            } finally {
-                if (subscription.value > -1) {
-                    TimerService.getInstance().unsubscribe(subscription.value);
-                }
+                sseEmitter.completeWithError(ex);
+                TimerService.getInstance().unsubscribe(subscription.value);
             }
         });
-        return emitter;
+        sseEmitter.onTimeout(sseEmitter::complete);
+        return sseEmitter;
+    }*/
+
+    @GetMapping(path = "/notifications/{userId}")
+    public ResponseEntity getNotifications(@PathVariable("userId") Long userId) {
+        final List<EventNotificationResponseDTO> notificationsDTO = NotificationsService.getInstance()
+                .getUserNotifications(userId);
+        return ResponseEntity.ok(notificationsDTO);
+    }
+
+    @PutMapping(path = "/notifications/state")
+    public ResponseEntity getNotifications(@Valid @RequestBody NotificationChangeStateDTO notification) {
+        NotificationsService.getInstance().changeNotificationReadState(notification.getUserId(),
+                notification.getNotificationId(), notification.getRead());
+        return ResponseEntity.ok().build();
     }
 }

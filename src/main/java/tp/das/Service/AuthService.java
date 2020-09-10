@@ -40,8 +40,6 @@ public class AuthService {
     public static Long checkLogin(LoginDTO loginDTO) {
         try {
             final AuthModel authModel = findByUsername(loginDTO.getUsername());
-            System.out.println(authModel);
-            System.out.println(AuthDataMapper.getInstance().findAll());
             return authModel != null && authModel.getPassword().equals(loginDTO.getPassword())
                     ? authModel.getId() : null;
         } catch (Exception e) {

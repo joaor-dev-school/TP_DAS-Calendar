@@ -19,7 +19,8 @@ public class UsersService {
         if (user == null) {
             throw new RuntimeException("Couldn't find any user with the given event id");
         }
-        return new UserResponseDTO(id, user.getName(), user.getAccount().getUsername());
+        return new UserResponseDTO(id, user.getName(), user.getAccount().getUsername(),
+                EventsService.getInstance().findEventsByParticipantId(user.getId()));
     }
 
     public static UserResponseDTO findByAccountId(Long id) {
@@ -27,7 +28,8 @@ public class UsersService {
         for (UserModel userModel : userModels) {
             final Long userId = userModel.getId();
             if (userId.equals(id)) {
-                return new UserResponseDTO(userId, userModel.getName(), userModel.getAccount().getUsername());
+                return new UserResponseDTO(userId, userModel.getName(), userModel.getAccount().getUsername(),
+                        EventsService.getInstance().findEventsByParticipantId(userId));
             }
         }
         return null;

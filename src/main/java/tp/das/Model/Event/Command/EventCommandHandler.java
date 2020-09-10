@@ -74,6 +74,11 @@ public class EventCommandHandler {
         this.redoListMap.remove(userId);
     }
 
+    public void cleanAllUsersRecord() {
+        this.undoListMap.clear();
+        this.redoListMap.clear();
+    }
+
     public int getUserUndoOperationsSize(Long userId) {
         final List<IEventCommand> undoList = this.getUndoList(userId);
         return undoList == null ? 0 : undoList.size();

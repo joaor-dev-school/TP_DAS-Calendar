@@ -131,7 +131,7 @@ public class NotificationsService {
                             final EventModel event = notification.getEvent();
                             final Long eventId = event.getId();
                             final DateModel firstDate = firstEventDateMap.get(eventId);
-                            final EventNotificationResponseDTO notificationResDTO = new EventNotificationResponseDTO()
+                            final EventNotificationResponseDTO notificationResDTO = new EventNotificationResponseDTO(notification.getId())
                                     .setName(event.getName())
                                     .setCreatorName(event.getCreator().getName())
                                     .setRead(notification.getRead())
@@ -149,7 +149,7 @@ public class NotificationsService {
         return res;
     }
 
-    public void changeNotificationReadState(Long notificationId, Boolean read) {
+    public void changeNotificationReadState(Long userId, Long notificationId, Boolean read) {
         final NotificationModel notificationModel = NotificationsDataMapper.getInstance().find(notificationId);
         if (notificationModel == null) {
             throw new RuntimeException("Notification not found with the given id");
@@ -158,6 +158,11 @@ public class NotificationsService {
         final UnitOfWork unitOfWork = SessionService.getUnitOfWork();
         unitOfWork.registerDirty(notificationModel);
         unitOfWork.commit();
+        this.cachedNotifications.remove(userId);
+    }
+
+    public void clearCache() {
+        this.cachedNotifications.clear();
     }
 
     private void deleteNotificationOnPersistence(NotificationModel notification) {

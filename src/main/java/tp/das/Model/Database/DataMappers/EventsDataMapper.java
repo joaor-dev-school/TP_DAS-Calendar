@@ -27,9 +27,10 @@ public class EventsDataMapper implements DataMapper<EventModel> {
 
     @Override
     public void create(EventModel eventModel) {
-        Long identifier = eventModel.getId() != null ? eventModel.getId() : identifiersCounter++;
+        Long identifier = eventModel.getId() != null ? eventModel.getId() : identifiersCounter;
         eventModel.setId(identifier);
         events.put(identifier, eventModel);
+        identifiersCounter++;
     }
 
     @Override

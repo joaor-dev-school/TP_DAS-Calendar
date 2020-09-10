@@ -27,8 +27,9 @@ public class NotificationsDataMapper implements DataMapper<NotificationModel> {
 
     @Override
     public void create(NotificationModel notification) {
-        notification.setId(identifiersCounter);
-        notifications.put(identifiersCounter, notification);
+        Long identifier = notification.getId() != null ? notification.getId() : identifiersCounter;
+        notification.setId(identifier);
+        notifications.put(identifier, notification);
         identifiersCounter++;
     }
 

@@ -39,4 +39,14 @@ public class CalendarStoreData implements ICalendarStoreData {
     public List<NotificationModel> getNotifications() {
         return notifications;
     }
+
+    @Override
+    public String toString() {
+        return "CalendarStoreData{" +
+                "accounts=" + accounts +
+                ", events=" + events +
+                ", users=" + users +
+                ", notifications=" + notifications +
+                '}';
+    }
 }

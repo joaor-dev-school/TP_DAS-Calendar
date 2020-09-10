@@ -27,8 +27,9 @@ public class UsersDataMapper implements DataMapper<UserModel> {
 
     @Override
     public void create(UserModel userModel) {
-        userModel.setId(identifiersCounter);
-        users.put(identifiersCounter, userModel);
+        Long identifier = userModel.getId() != null ? userModel.getId() : identifiersCounter;
+        userModel.setId(identifier);
+        users.put(identifier, userModel);
         identifiersCounter++;
     }
 

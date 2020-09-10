@@ -8,5 +8,6 @@ import java.util.List;
 public interface ICalendarDataStoreAdapter {
      void write(String filename, ICalendarStoreData data) throws IOException;
     ICalendarStoreData read(String filename) throws IOException;
-    List<String> filenames();
+    List<String> filenames() throws IOException;
+    void deleteFile(String filename) throws IOException;
 }

@@ -4,18 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tp.das.DTOs.Auth.LoginDTO;
-import tp.das.DTOs.Auth.LoginResponseDTO;
 import tp.das.DTOs.Auth.RegisterDTO;
-import tp.das.DTOs.Event.EventDetailsResponseDTO;
 import tp.das.DTOs.Event.UserOperationDTO;
 import tp.das.DTOs.User.UserResponseDTO;
-import tp.das.Model.Utilizador.UserModel;
 import tp.das.Service.AuthService;
 import tp.das.Service.EventsService;
 import tp.das.Service.UsersService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -37,7 +33,7 @@ public class AuthController {
         if(user == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(new LoginResponseDTO(user, EventsService.getInstance().findEventsByParticipantId(authId)));
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(path = "/logout")

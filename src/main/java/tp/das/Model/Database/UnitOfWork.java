@@ -3,10 +3,12 @@ package tp.das.Model.Database;
 import tp.das.Model.Auth.AuthModel;
 import tp.das.Model.Database.DataMappers.AuthDataMapper;
 import tp.das.Model.Database.DataMappers.EventsDataMapper;
+import tp.das.Model.Database.DataMappers.NotificationsDataMapper;
 import tp.das.Model.Database.DataMappers.UsersDataMapper;
 import tp.das.Model.Event.Decorators.PeriodicEventDecorator;
 import tp.das.Model.Event.EventModel;
 import tp.das.Model.Event.EventSchedulingModel;
+import tp.das.Model.Notifications.NotificationModel;
 import tp.das.Model.Utilizador.UserModel;
 
 import java.util.ArrayList;
@@ -20,7 +22,8 @@ public class UnitOfWork {
             EventSchedulingModel.class,
             PeriodicEventDecorator.class,
             AuthModel.class,
-            UserModel.class
+            UserModel.class,
+            NotificationModel.class
     };
     private Set<EntityModel> create = new HashSet<>();
     private Set<EntityModel> update = new HashSet<>();
@@ -155,6 +158,9 @@ public class UnitOfWork {
         }
         if (c.equals(AuthModel.class)) {
             return AuthDataMapper.getInstance();
+        }
+        if (c.equals(NotificationModel.class)) {
+            return NotificationsDataMapper.getInstance();
         }
         throw new RuntimeException("No data mapper for entity object " + c);
     }

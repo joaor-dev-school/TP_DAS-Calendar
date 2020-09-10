@@ -123,6 +123,10 @@ public class EventsService {
         this.eventCommandHandler.cleanUserRecord(userId);
     }
 
+    public void cleanAllUsersRecord() {
+        this.eventCommandHandler.cleanAllUsersRecord();
+    }
+
     public void updateEventCollaborativeStatus(Long eventId, EventSchedulingStatusDTO preferencesDTO) {
         final Long userId = preferencesDTO.getUserId();
         this.eventCommandHandler.apply(userId, preferencesDTO.getStatus() == EventParticipantStatesEnum.ACCEPTED

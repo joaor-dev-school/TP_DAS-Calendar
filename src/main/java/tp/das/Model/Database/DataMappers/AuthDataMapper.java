@@ -28,6 +28,11 @@ public class AuthDataMapper implements DataMapper<AuthModel> {
 
     @Override
     public void create(AuthModel e) throws Exception {
+        if (e.getId() != null) {
+            e.setDeleted(false);
+            this.update(e.getId(), e);
+            return;
+        }
         final Connection c = SessionService.getConnection();
         final PreparedStatement ps = c.prepareStatement("INSERT INTO accounts VALUES(DEFAULT, '" + e.getUsername() + "', '" + e.getPassword() + "', 0)",
                 Statement.RETURN_GENERATED_KEYS);
@@ -40,14 +45,14 @@ public class AuthDataMapper implements DataMapper<AuthModel> {
     @Override
     public void update(Object id, AuthModel e) throws Exception {
         Connection c = SessionService.getConnection();
-        PreparedStatement ps = c.prepareStatement("UPDATE accounts SET username='" + e.getUsername() + "', password='" + e.getPassword() + "' WHERE id=" + id + ")");
+        PreparedStatement ps = c.prepareStatement("UPDATE accounts SET username='" + e.getUsername() + "', password='" + e.getPassword() + "', deleted=" + (e.getDeleted() ? 1 : 0) + " WHERE id=" + id);
         ps.executeUpdate();
     }
 
     @Override
     public void delete(Object id) throws Exception {
         final Connection c = SessionService.getConnection();
-        final PreparedStatement ps = c.prepareStatement("UPDATE accounts SET deleted=1 WHERE id=" + id + ")");
+        final PreparedStatement ps = c.prepareStatement("UPDATE accounts SET deleted=1 WHERE id=" + id);
         ps.executeUpdate();
     }
 
