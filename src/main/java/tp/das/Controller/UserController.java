@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tp.das.DTOs.Event.EventNotificationResponseDTO;
 import tp.das.DTOs.Event.UserOperationDTO;
 import tp.das.DTOs.Notification.NotificationChangeStateDTO;
+import tp.das.DTOs.User.ChangeUserNameDTO;
 import tp.das.DTOs.User.UserSchedulingPreferencesDTO;
 import tp.das.Model.Shared.LongObject;
 import tp.das.Service.NotificationsService;
@@ -76,9 +77,15 @@ public class UserController {
     }
 
     @PutMapping(path = "/notifications/state")
-    public ResponseEntity getNotifications(@Valid @RequestBody NotificationChangeStateDTO notification) {
+    public ResponseEntity changeNotificationState(@Valid @RequestBody NotificationChangeStateDTO notification) {
         NotificationsService.getInstance().changeNotificationReadState(notification.getUserId(),
                 notification.getNotificationId(), notification.getRead());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/change-name")
+    public ResponseEntity changeUser(@Valid @RequestBody ChangeUserNameDTO user) {
+        UsersService.changeName(user.getUserId(), user.getName());
         return ResponseEntity.ok().build();
     }
 }

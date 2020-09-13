@@ -3,6 +3,7 @@ package tp.das.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tp.das.DTOs.Auth.ChangePasswordDTO;
 import tp.das.DTOs.Auth.LoginDTO;
 import tp.das.DTOs.Auth.RegisterDTO;
 import tp.das.DTOs.Event.UserOperationDTO;
@@ -30,7 +31,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         final UserResponseDTO user = UsersService.findByAccountId(authId);
-        if(user == null) {
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(user);
@@ -45,6 +46,21 @@ public class AuthController {
     @PostMapping(path = "/register")
     public ResponseEntity register(@Valid @RequestBody RegisterDTO registerDTO) {
         AuthService.createAccount(registerDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/check-password")
+    public ResponseEntity checkPassword(@Valid @RequestBody LoginDTO loginDTO) {
+        final Long authId = AuthService.checkLogin(loginDTO);
+        if (authId == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/change-password")
+    public ResponseEntity changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        AuthService.changePassword(changePasswordDTO.getUserId(), changePasswordDTO.getPassword());
         return ResponseEntity.ok().build();
     }
 }

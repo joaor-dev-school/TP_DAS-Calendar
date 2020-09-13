@@ -4,6 +4,7 @@ import tp.das.DTOs.Auth.LoginDTO;
 import tp.das.DTOs.Auth.RegisterDTO;
 import tp.das.Model.Auth.AuthModel;
 import tp.das.Model.Database.DataMappers.AuthDataMapper;
+import tp.das.Model.Database.DataMappers.UsersDataMapper;
 import tp.das.Model.Database.UnitOfWork;
 import tp.das.Model.Utilizador.UserModel;
 
@@ -46,5 +47,26 @@ public class AuthService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void changePassword(Long userId, String password) {
+        final AuthModel account = findAccountByUserId(userId);
+        if (account == null) {
+            throw new RuntimeException("No account found with the given user id");
+        }
+        final UnitOfWork unitOfWork = SessionService.getUnitOfWork();
+        account.setPassword(password);
+        unitOfWork.registerDirty(account);
+        unitOfWork.commit();
+    }
+
+    private static AuthModel findAccountByUserId(Long userId) {
+        final List<UserModel> userModels = UsersDataMapper.getInstance().findAll();
+        for (UserModel userModel : userModels) {
+            if (userModel.getId().equals(userId)) {
+                return userModel.getAccount();
+            }
+        }
+        return null;
     }
 }

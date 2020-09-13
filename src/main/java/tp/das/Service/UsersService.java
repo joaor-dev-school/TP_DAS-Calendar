@@ -17,7 +17,7 @@ public class UsersService {
     public static UserResponseDTO findById(Long id) {
         final UserModel user = UsersDataMapper.getInstance().find(id);
         if (user == null) {
-            throw new RuntimeException("Couldn't find any user with the given event id");
+            throw new RuntimeException("Couldn't find any user with the given user id");
         }
         return new UserResponseDTO(id, user.getName(), user.getAccount().getUsername(),
                 EventsService.getInstance().findEventsByParticipantId(user.getId()));
@@ -58,6 +58,17 @@ public class UsersService {
         userModel.setPreferences(userPreferences);
         final UnitOfWork unitOfWork = SessionService.getUnitOfWork();
         unitOfWork.registerDirty(userModel);
+        unitOfWork.commit();
+    }
+
+    public static void changeName(Long id, String name) {
+        final UserModel user = UsersDataMapper.getInstance().find(id);
+        if (user == null) {
+            throw new RuntimeException("Couldn't find any user with the given user id");
+        }
+        final UnitOfWork unitOfWork = SessionService.getUnitOfWork();
+        user.setName(name);
+        unitOfWork.registerDirty(user);
         unitOfWork.commit();
     }
 }
